@@ -1,0 +1,84 @@
+#+title: Distributed Systems
+#+author: Rei
+#+date: 2026-10-01
+#+language: ja
+#+startup: overview
+
+* Overview
+
+分散システムとは、複数の独立した computer が network を介して協調し、
+利用者からは一つの system のように見えるものを指す。
+
+代表的な目的:
+
+- scalability
+- fault tolerance
+- resource sharing
+- geographic distribution
+
+* Week 01: Introduction
+
+** Definition
+
+分散システムでは、各 node がそれぞれ local state を持つ。
+
+#+begin_src text
+Node A ---- Network ---- Node B
+  |                       |
+State A                 State B
+#+end_src
+
+重要なのは、global clock や完全に共有された state を前提にできない点である。
+
+** Main Problems
+
+*** Partial Failure
+
+一部の node だけが故障する可能性がある。
+
+例えば Node A から Node B に request を送った場合でも、
+
+1. request が届かなかった
+2. request は届いたが response が失われた
+3. Node B が処理中に crash した
+
+などを区別できない場合がある。
+
+*** Network Delay
+
+network の latency は一定ではない。
+
+#+begin_quote
+Absence of a response does not necessarily mean failure.
+#+end_quote
+
+timeout は failure detection のために利用できるが、
+timeout だけでは node failure を完全には判定できない。
+
+** Consistency
+
+replica を複数持つ場合、それぞれの state をどのように一致させるかが問題になる。
+
+例:
+
+#+begin_src rust
+struct Replica {
+    value: String,
+    version: u64,
+}
+#+end_src
+
+strong consistency を要求すると coordination の cost が増える。
+
+一方で eventual consistency では、一時的な state の差を許容する。
+
+* Questions
+
+- global clock が存在しないとは具体的にどういう意味か
+- timeout の値はどのように決定するのか
+- consistency と availability の trade-off はどこで現れるのか
+
+* References
+
+- Tanenbaum, Distributed Systems
+- Martin Kleppmann, Designing Data-Intensive Applications

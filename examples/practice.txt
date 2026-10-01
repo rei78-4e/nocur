@@ -1,0 +1,19 @@
+project: nocur
+owner: Rei
+status: draft
+
+TODO: rename foo in the guide
+note: foo appears twice: foo
+DONE: create the first preview
+TODO: review the error message
+
+  item: alpha
+    item: beta
+ item: gamma
+
+level: info | server started
+level: warn | slow response
+level: error | connection lost
+level: info | retry succeeded
+
+TODO: publish the guide
