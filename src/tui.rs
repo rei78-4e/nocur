@@ -320,9 +320,9 @@ fn completion_line(matches: &[Completion], selected: usize) -> String {
 fn argument_hint(source: &str, caret: usize) -> Option<String> {
     let frame = call_context(source, caret)?;
     let hint = match (frame.name?, frame.argument) {
-        ("replace", 0) => "replace · regex pattern, e.g. /foo/",
+        ("replace", 0) => "replace · selector: /regex/, \"text\", lines(a..b), or row:col-row:col",
         ("replace", 1) => "replace · replacement text in quotes, e.g. \"bar\"",
-        ("delete", 0) => "delete · regex pattern, e.g. /foo/",
+        ("delete", 0) => "delete · regex /pattern/ or literal \"text\"",
         ("insert", 0) => "insert · line number, gg (first), or G (last)",
         ("insert", 1) => "insert · text to place before the selected line",
         ("trim", _) => "trim · takes no arguments",
@@ -334,7 +334,7 @@ fn argument_hint(source: &str, caret: usize) -> Option<String> {
                 "lines · inclusive range, e.g. 1..10"
             }
         }
-        ("filter", 0) => "filter · regex matched against each line",
+        ("filter", 0) => "filter · regex /pattern/ or literal \"text\"",
         ("map", _) => "map · pipeline to apply to each line",
         _ => return None,
     };

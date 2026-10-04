@@ -11,6 +11,44 @@ fn apply(source: &str, input: &str) -> String {
 #[test]
 fn primitives_and_newline_semantics() {
     assert_eq!(apply(r#"replace(/foo/, "bar")"#, "foo foo\n"), "bar bar\n");
+    assert_eq!(
+        apply(r#"replace("foo", "bar")"#, "foo food foo"),
+        "bar bard bar"
+    );
+    assert_eq!(apply(r#"delete("foo")"#, "foo food"), " d");
+    assert_eq!(
+        apply(r#"filter("TODO")"#, "TODO x\nno\nTODO y"),
+        "TODO x\nTODO y"
+    );
+    assert_eq!(
+        apply(r#"replace(lines(2..2), "X\n")"#, "a\nb\nc\n"),
+        "a\nX\nc\n"
+    );
+    assert_eq!(
+        apply(r#"replace(lines(2..3), "X\n")"#, "a\nb\nc\nd\n"),
+        "a\nX\nd\n"
+    );
+    assert_eq!(
+        apply(r#"replace(2:2-2:3, "猫")"#, "a\n犬猫鳥\n"),
+        "a\n犬猫\n"
+    );
+    assert_eq!(
+        apply(r#"replace(1:1-1:1, "X")"#, "a\r\nb\r\n"),
+        "X\r\nb\r\n"
+    );
+    assert!(eval(&parse(r#"replace(9:1-9:1, "x")"#).unwrap(), "a\n").is_err());
+    assert!(eval(&parse(r#"replace(1:2-1:2, "x")"#).unwrap(), "a").is_err());
+    assert!(parse(r#"replace(1:0-1:1, "x")"#).is_err());
+    assert!(parse(r#"replace(0:1-0:1, "x")"#).is_err());
+    assert!(eval(
+        &parse(r#"replace(lines(2..9), "x")"#).unwrap(),
+        "a\r\nb\r\n"
+    )
+    .is_err());
+    assert_eq!(
+        apply(r#"replace(lines(2..3), "X\r\n")"#, "a\r\nb\r\nc\r\nd\r\n"),
+        "a\r\nX\r\nd\r\n"
+    );
     assert_eq!(apply(r#"delete(/foo/)"#, "foo x foo"), " x ");
     assert_eq!(apply(r#"insert(2, "new\n")"#, "a\nb"), "a\nnew\nb");
     assert_eq!(apply(r#"insert(1, "x")"#, ""), "x");

@@ -18,6 +18,22 @@ replace(/foo/, "nocur")
 
 `foo` に一致する部分をすべて `nocur` に置き換えます。練習テキストでは、TODO行とnote行の `foo` が置き換わります。
 
+正規表現を使わず、文字列そのものを指定することもできます。`delete` と `filter` も同じく `/.../` または引用符付き文字列を受け取ります。
+
+```text
+replace("foo", "nocur")
+delete("TODO: ")
+filter("TODO")
+```
+
+連続した複数行は1つの範囲として置き換わります。
+
+```text
+replace(lines(2..3), "Combined\n")
+```
+
+行・列を直接指定する場合は `replace(2:1-3:4, "text")` の形式です。行と列は1始まり、両端を含むUnicode文字単位です。存在しない行や、行の文字数を超える列を指定するとエラーになります。
+
 ```text
 delete(/TODO: /)
 ```
